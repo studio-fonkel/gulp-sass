@@ -9,7 +9,11 @@ const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const tap = require('gulp-tap');
 const globule = require('globule');
-const sass = require('../index');
+const nodeSass = require('node-sass');
+// const dartSass = require('sass');
+const gulpSass = require('../index');
+
+gulpSass.compiler = nodeSass;
 
 const createVinyl = (filename, contents) => {
   const base = path.join(__dirname, 'scss');
@@ -35,7 +39,7 @@ describe('test helpers', () => {
 
 describe('gulp-sass -- async compile', () => {
   it('should pass file when it isNull()', (done) => {
-    const stream = sass();
+    const stream = gulpSass();
     const emptyFile = {
       isNull: () => true,
     };
@@ -47,7 +51,7 @@ describe('gulp-sass -- async compile', () => {
   });
 
   it('should emit error when file isStream()', (done) => {
-    const stream = sass();
+    const stream = gulpSass();
     const streamFile = {
       isNull: () => false,
       isStream: () => true,
@@ -61,7 +65,7 @@ describe('gulp-sass -- async compile', () => {
 
   it('should compile an empty sass file', (done) => {
     const sassFile = createVinyl('empty.scss');
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -78,7 +82,7 @@ describe('gulp-sass -- async compile', () => {
 
   it('should compile a single sass file', (done) => {
     const sassFile = createVinyl('mixins.scss');
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -97,7 +101,7 @@ describe('gulp-sass -- async compile', () => {
       createVinyl('mixins.scss'),
       createVinyl('variables.scss'),
     ];
-    const stream = sass();
+    const stream = gulpSass();
     let mustSee = files.length;
     let expectedPath = path.join('expected', 'mixins.css');
 
@@ -126,7 +130,7 @@ describe('gulp-sass -- async compile', () => {
 
   it('should compile files with partials in another folder', (done) => {
     const sassFile = createVinyl('inheritance.scss');
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -142,16 +146,16 @@ describe('gulp-sass -- async compile', () => {
 
   it('should emit logError on sass error', (done) => {
     const errorFile = createVinyl('error.scss');
-    const stream = sass();
+    const stream = gulpSass();
 
-    stream.on('error', sass.logError);
+    stream.on('error', gulpSass.logError);
     stream.on('end', done);
     stream.write(errorFile);
   });
 
   it('should handle sass errors', (done) => {
     const errorFile = createVinyl('error.scss');
-    const stream = sass();
+    const stream = gulpSass();
 
     stream.on('error', (err) => {
       // Error must include message body
@@ -169,7 +173,7 @@ describe('gulp-sass -- async compile', () => {
 
   it('should preserve the original sass error message', (done) => {
     const errorFile = createVinyl('error.scss');
-    const stream = sass();
+    const stream = gulpSass();
 
     stream.on('error', (err) => {
       // Error must include original error message
@@ -186,7 +190,7 @@ describe('gulp-sass -- async compile', () => {
     // Transform file name
     sassFile.path = path.join(path.join(__dirname, 'scss'), 'mixin--changed.scss');
 
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -206,7 +210,7 @@ describe('gulp-sass -- async compile', () => {
     // Transform file name
     sassFile.contents = Buffer.from(`/* Added Dynamically */${sassFile.contents.toString()}`);
 
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -240,7 +244,7 @@ describe('gulp-sass -- async compile', () => {
       'includes/_dogs.sass',
     ];
 
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile.sourceMap);
       cssFile.sourceMap.sources.should.eql(expectedSources);
@@ -251,7 +255,7 @@ describe('gulp-sass -- async compile', () => {
 
   it('should compile a single indented sass file', (done) => {
     const sassFile = createVinyl('indent.sass');
-    const stream = sass();
+    const stream = gulpSass();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -270,7 +274,7 @@ describe('gulp-sass -- async compile', () => {
       createVinyl('mixins.scss'),
       createVinyl('indent.sass'),
     ];
-    const stream = sass();
+    const stream = gulpSass();
     let mustSee = files.length;
     let expectedPath = path.join('expected', 'mixins.css');
 
@@ -304,7 +308,7 @@ describe('gulp-sass -- sync compile', () => {
   });
 
   it('should pass file when it isNull()', (done) => {
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
     const emptyFile = {
       isNull: () => true,
     };
@@ -316,7 +320,7 @@ describe('gulp-sass -- sync compile', () => {
   });
 
   it('should emit error when file isStream()', (done) => {
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
     const streamFile = {
       isNull: () => false,
       isStream: () => true,
@@ -330,7 +334,7 @@ describe('gulp-sass -- sync compile', () => {
 
   it('should compile a single sass file', (done) => {
     const sassFile = createVinyl('mixins.scss');
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
       should.exist(cssFile.path);
@@ -349,7 +353,7 @@ describe('gulp-sass -- sync compile', () => {
       createVinyl('mixins.scss'),
       createVinyl('variables.scss'),
     ];
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
     let mustSee = files.length;
     let expectedPath = path.join('expected', 'mixins.css');
 
@@ -379,7 +383,7 @@ describe('gulp-sass -- sync compile', () => {
 
   it('should compile files with partials in another folder', (done) => {
     const sassFile = createVinyl('inheritance.scss');
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
 
     stream.on('data', (cssFile) => {
       should.exist(cssFile);
@@ -396,7 +400,7 @@ describe('gulp-sass -- sync compile', () => {
 
   it('should handle sass errors', (done) => {
     const errorFile = createVinyl('error.scss');
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
 
     stream.on('error', (err) => {
       err.message.indexOf('property "font" must be followed by a \':\'').should.not.equal(-1);
@@ -408,9 +412,9 @@ describe('gulp-sass -- sync compile', () => {
 
   it('should emit logError on sass error', (done) => {
     const errorFile = createVinyl('error.scss');
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
 
-    stream.on('error', sass.logError);
+    stream.on('error', gulpSass.logError);
     stream.on('end', done);
     stream.write(errorFile);
   });
@@ -434,7 +438,7 @@ describe('gulp-sass -- sync compile', () => {
       + '"sourcesContent": [ "@import ../inheritance;" ]'
     + '}';
 
-    const stream = sass.sync();
+    const stream = gulpSass.sync();
     stream.on('data', (cssFile) => {
       should.exist(cssFile.sourceMap);
       cssFile.sourceMap.sources.should.eql(expectedSources);
@@ -443,13 +447,17 @@ describe('gulp-sass -- sync compile', () => {
     stream.write(sassFile);
   });
 
-  it('should work with gulp-sourcemaps and autoprefixer', (done) => {
+  // eslint-disable-next-line func-names
+  it('should work with gulp-sourcemaps and autoprefixer', function (done) {
+    this.timeout(4000);
+
     const expectedSourcesBefore = [
       'inheritance.scss',
       'includes/_cats.scss',
       'includes/_dogs.sass',
     ];
 
+    // eslint-disable-next-line no-unused-vars
     const expectedSourcesAfter = [
       'includes/_cats.scss',
       'includes/_dogs.sass',
@@ -458,7 +466,7 @@ describe('gulp-sass -- sync compile', () => {
 
     gulp.src(path.join(__dirname, 'scss', 'inheritance.scss'))
       .pipe(sourcemaps.init())
-      .pipe(sass.sync())
+      .pipe(gulpSass.sync())
       .pipe(tap((file) => {
         should.exist(file.sourceMap);
         file.sourceMap.sources.should.eql(expectedSourcesBefore);
@@ -470,10 +478,13 @@ describe('gulp-sass -- sync compile', () => {
         should.exist(file.sourceMap);
         file.sourceMap.sources.should.eql(expectedSourcesAfter);
       }))
-      .on('end', done);
+      .on('finish', done);
   });
 
-  it('should work with gulp-sourcemaps and a globbed source', (done) => {
+  // eslint-disable-next-line func-names
+  it('should work with gulp-sourcemaps and a globbed source', function (done) {
+    this.timeout(4000);
+
     const globPath = path.join(__dirname, 'scss', 'globbed');
     const files = globule.find(path.join(__dirname, 'scss', 'globbed', '**', '*.scss'));
     const filesContent = {};
@@ -485,17 +496,20 @@ describe('gulp-sass -- sync compile', () => {
 
     gulp.src(path.join(__dirname, 'scss', 'globbed', '**', '*.scss'))
       .pipe(sourcemaps.init())
-      .pipe(sass.sync())
+      .pipe(gulpSass.sync())
       .pipe(tap((file) => {
         should.exist(file.sourceMap);
         const actual = normaliseEOL(file.sourceMap.sourcesContent[0]);
         const expected = normaliseEOL(filesContent[path.normalize(file.sourceMap.sources[0])]);
         actual.should.eql(expected);
       }))
-      .on('end', done);
+      .on('finish', done);
   });
 
-  it('should work with gulp-sourcemaps and autoprefixer with different file.base', (done) => {
+  // eslint-disable-next-line func-names
+  it('should work with gulp-sourcemaps and autoprefixer with different file.base', function (done) {
+    this.timeout(4000);
+
     const expectedSourcesBefore = [
       'scss/inheritance.scss',
       'scss/includes/_cats.scss',
@@ -510,7 +524,7 @@ describe('gulp-sass -- sync compile', () => {
 
     gulp.src(path.join(__dirname, 'scss', 'inheritance.scss'), { base: 'test' })
       .pipe(sourcemaps.init())
-      .pipe(sass.sync())
+      .pipe(gulpSass.sync())
       .pipe(tap((file) => {
         should.exist(file.sourceMap);
         file.sourceMap.sources.should.eql(expectedSourcesBefore);
@@ -520,12 +534,15 @@ describe('gulp-sass -- sync compile', () => {
         should.exist(file.sourceMap);
         file.sourceMap.sources.should.eql(expectedSourcesAfter);
       }))
-      .on('end', done);
+      .on('finish', done);
   });
 
-  it('should work with empty files', (done) => {
+  // eslint-disable-next-line func-names
+  it('should work with empty files', function (done) {
+    this.timeout(4000);
+
     gulp.src(path.join(__dirname, 'scss', 'empty.scss'))
-      .pipe(sass.sync())
+      .pipe(gulpSass.sync())
       .pipe(gulp.dest(path.join(__dirname, 'results')))
       .pipe(tap(() => {
         try {
@@ -534,6 +551,6 @@ describe('gulp-sass -- sync compile', () => {
           should.fail(false, true, 'Empty file was produced');
         }
       }))
-      .on('end', done);
+      .on('finish', done);
   });
 });
