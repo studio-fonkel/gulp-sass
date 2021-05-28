@@ -1,5 +1,10 @@
 # Gulp Sass Changelog
 
+## v5.0.2
+**May 28, 2021**
+- **Change** Updated all dependencies and installed missing dependencies for tests.
+- **Fix** Fix tests.
+
 ## v5.0.1
 **May 28, 2021**
 - **Fix** Add missing return statement.
