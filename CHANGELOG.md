@@ -1,5 +1,13 @@
 # Gulp Sass Changelog
 
+## v5.0.1
+**May 28, 2021**
+- **Fix** Add missing return statement.
+
+## v5.0.0
+**May 28, 2021**
+- **Breaking change** Instead of using `node-sass` as the default Sass compiler, from `gulp-sass` v5.x onwards, explicitly setting a compiler is mandatory. If no compiler has been set, the plugin will throw a `TypeError`.
+
 ## v4.1.0
 **April 23, 2020**
 
