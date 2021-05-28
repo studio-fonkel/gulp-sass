@@ -6,6 +6,7 @@
     "node": true
   },
   "rules": {
-    "max-len": [2, 120]
+    "max-len": [2, 120],
+    "spaced-comment": [2, "always", { "exceptions": ["////////////////////////////"] }]
   }
 }
