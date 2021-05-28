@@ -123,7 +123,7 @@ const gulpSass = (options, sync) => through.obj((file, enc, cb) => { // eslint-d
   };
 
   if (!gulpSass.compiler) {
-    errorM(new TypeError(`Missing Sass compiler. Please set a compiler explicitly.`));
+    return errorM(new TypeError(`Missing Sass compiler. Please set a compiler explicitly.`));
   }
 
   if (sync !== true) {
