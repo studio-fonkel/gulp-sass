@@ -88,7 +88,7 @@ const gulpSass = (options, sync) => through.obj((file, enc, cb) => { // eslint-d
       }
 
       // Remove 'stdin' from souces and replace with filenames!
-      sassMap.sources = sassMap.sources.filter(src => src !== 'stdin' && src);
+      sassMap.sources = sassMap.sources.filter((src) => src !== 'stdin' && src);
 
       // Replace the map file with the original file name (but new extension)
       sassMap.file = replaceExtension(sassFileSrc, '.css');
@@ -123,7 +123,7 @@ const gulpSass = (options, sync) => through.obj((file, enc, cb) => { // eslint-d
   };
 
   if (!gulpSass.compiler) {
-    return errorM(new TypeError(`Missing Sass compiler. Please set a compiler explicitly.`));
+    return errorM(new TypeError('Missing Sass compiler. Please set a compiler explicitly.'));
   }
 
   if (sync !== true) {
@@ -153,7 +153,7 @@ const gulpSass = (options, sync) => through.obj((file, enc, cb) => { // eslint-d
 //////////////////////////////
 // Sync Sass render
 //////////////////////////////
-gulpSass.sync = options => gulpSass(options, true);
+gulpSass.sync = (options) => gulpSass(options, true);
 
 //////////////////////////////
 // Log errors nicely
