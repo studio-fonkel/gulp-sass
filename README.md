@@ -13,8 +13,10 @@ Only [Active LTS and Current releases][1] are supported.
 # Install
 
 ```
-npm install node-sass gulp-sass --save-dev
+npm install gulp-sass --save-dev
 ```
+
+You must also install either `sass` (Dart Sass) or `node-sass` (Node Sass).
 
 # Basic Usage
 
@@ -60,9 +62,9 @@ gulp.task('sass:watch', function () {
 });
 ```
 
-You can choose whether to use [Dart Sass][] or [Node Sass][] by setting the `sass.compiler` property. Node Sass will be used by default, but it's strongly recommended that you set it explicitly for forwards-compatibility in case the default ever changes.
+You need to choose whether to use [Dart Sass][] or [Node Sass][] by setting the `sass.compiler` property. No compiler is set by default, so it's required to set it explicitly.
 
-[Dart Sass]: http://sass-lang.com/dart-sass
+[Dart Sass]: https://github.com/sass/dart-sass
 [Node Sass]: https://github.com/sass/node-sass
 
 Note that when using Dart Sass, **synchronous compilation is twice as fast as asynchronous compilation** by default, due to the overhead of asynchronous callbacks. To avoid this overhead, you can use the [`fibers`](https://www.npmjs.com/package/fibers) package to call asynchronous importers from the synchronous code path. To enable this, pass the `Fiber` class to the `fiber` option:

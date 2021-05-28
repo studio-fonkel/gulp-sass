@@ -122,6 +122,10 @@ const gulpSass = (options, sync) => through.obj((file, enc, cb) => { // eslint-d
     return cb(new PluginError(PLUGIN_NAME, error));
   };
 
+  if (!gulpSass.compiler) {
+    errorM(new TypeError(`Missing Sass compiler. Please set a compiler explicitly.`));
+  }
+
   if (sync !== true) {
     //////////////////////////////
     // Async Sass render
@@ -159,10 +163,5 @@ gulpSass.logError = function logError(error) {
   process.stderr.write(`${message}\n`);
   this.emit('end');
 };
-
-//////////////////////////////
-// Store compiler in a prop
-//////////////////////////////
-gulpSass.compiler = require('node-sass');
 
 module.exports = gulpSass;
