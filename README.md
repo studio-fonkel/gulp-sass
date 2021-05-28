@@ -25,8 +25,8 @@ Something like this will compile your Sass files:
 ```javascript
 'use strict';
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
 
 sass.compiler = require('node-sass');
 
@@ -46,8 +46,8 @@ You can also compile synchronously, doing something like this:
 ```javascript
 'use strict';
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
 
 sass.compiler = require('node-sass');
 
@@ -72,9 +72,9 @@ Note that when using Dart Sass, **synchronous compilation is twice as fast as as
 ```javascript
 'use strict';
 
-var Fiber = require('fibers');
-var gulp = require('gulp');
-var sass = require('gulp-sass');
+const Fiber = require('fibers');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
 
 sass.compiler = require('sass');
 
